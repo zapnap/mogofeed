@@ -1,0 +1,23 @@
+!!!
+%html{html_attrs}
+  %head
+    %title= @title || SiteConfig.title
+    %link{:href => '/stylesheets/application.css', :rel => 'stylesheet', :type => 'text/css'}
+  %body
+    #container
+      #header
+        #logo
+          %h1
+            %a{:href => '/'}= @title || SiteConfig.title
+      #sidebar
+        %h2 Search
+        %input{:type => 'text', :id => 'search', :name => 'q'}
+        %h2 Feeds
+        %ul.feeds
+          - Feed.all.each do |feed|
+            %li.feed
+              %a{:href => feed.url}= feed.title
+      #content= yield
+      .clear
+      #footer
+        %p#legal= "&mdash; All content copyright its respective authors &mdash;"

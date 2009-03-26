@@ -1,0 +1,24 @@
+= Mogo: A Planet-Style Feed Aggregator
+
+Mogo combines multiple news feeds (or feed topic searches) into a single web page view, much like a typical "Planet"-style feed aggregator. It's built in Ruby on top of Sinatra and DataMapper.
+
+== Configuration
+
+Dependencies and all configuration is done in <tt>environment.rb</tt>. Your database is also set up here. DataMapper will use sqlite3 by default. Tests use the sqlite3-memory adapter (no configuration needed).
+
+== Getting Started
+
+  rake db:migrate
+  rake feeds:add URL=http://blog.zerosum.org/feed/atom.xml
+  rake feeds:update
+  ruby application.rb
+
+== Adding Feeds
+
+I'll add a web interface for this soon. In the meantime, run <tt>rake feeds:add</tt> and specify the feed URL you want to add as a parameter. Example:
+
+  rake feeds:add URL=http://blog.zerosum.org/feed/atom.xml
+
+== Status Updates
+
+Run <tt>rake feeds:update</tt> to update the cached feeds. You can schedule this as a cron job to fire every few minutes if you like.
