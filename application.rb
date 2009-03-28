@@ -27,7 +27,6 @@ end
 end
 
 post '/search' do
-  # TODO: use dm-is-searchable and the sphinx search adapter here!
-  @entries = [Entry.first]
+  @entries = Entry.search({ :content => params[:q] })
   haml :search
 end

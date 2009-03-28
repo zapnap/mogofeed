@@ -22,3 +22,15 @@ I'll add a web interface for this soon. In the meantime, run <tt>rake feeds:add<
 == Status Updates
 
 Run <tt>rake feeds:update</tt> to update the cached feeds. You can schedule this as a cron job to fire every few minutes if you like.
+
+== Searching
+
+We use Sphinx for full-text indexing and search. Therefore, you'll need to have it installed. You can find downloads and installation instructions at http://www.sphinxsearch.com.
+
+To enable search in Mogo, set the option in <tt>environment.rb</tt>. I've only tested this with MySQL, so set your database connection string to a MySQL database you'll create (default: 'mogo' with user 'root'). Feel free to tune the sample configuration provided in sphinx.conf to your taste. You probably won't want to use a passwordless root user in a production environment ;-).
+
+Once that's done, go ahead and run the supplied Rake tasks to get up and running:
+
+  rake sphinx:index        # update the search indexes; you'll probably want to schedule this periodically
+  rake sphinx:search:start # start it up
+  rake sphinx:search:stop  # shut it down

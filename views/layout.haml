@@ -10,8 +10,10 @@
           %h1
             %a{:href => '/'}= @title || SiteConfig.title
       #sidebar
-        %h2 Search
-        %input{:type => 'text', :id => 'search', :name => 'q'}
+        - if SiteConfig.search
+          %h2 Search
+          %form{:action => '/search', :method => 'post'}
+            %input{:type => 'text', :id => 'search', :name => 'q'}
         %h2 Feeds
         %ul.feeds
           - Feed.all.each do |feed|

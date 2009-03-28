@@ -1,4 +1,3 @@
-require 'environment'
 require 'spec/rake/spectask'
 
 task :default => :test
@@ -16,19 +15,19 @@ end
 
 namespace :db do
   desc 'Auto-migrate the database (destroys data)'
-  task :migrate do
+  task :migrate => :environment do
     DataMapper.auto_migrate!
   end
 
   desc 'Auto-upgrade the database (preserves data)'
-  task :upgrade do
+  task :upgrade => :environment  do
     DataMapper.auto_upgrade!
   end
 end
 
 namespace :feeds do
   desc 'Update the local feed cache'
-  task :update do
+  task :update => :environment do
     Feed.all.each do |feed|
       count = feed.update_from_remote
       puts "#{feed.title} :: #{count} new entries retrieved"
@@ -36,17 +35,59 @@ namespace :feeds do
   end
 
   desc 'Add a feed to the system (URL=http://blog.zerosum.org/feed/atom.xml)'
-  task :add do
+  task :add => :environment do
     raise "ERROR: You must specify a valid feed URL!" unless feed_url = ENV['URL']
     Feed.create(:feed_url => feed_url)
+  end
+end
+
+namespace :sphinx do
+  desc 'configure the search Sphinx engine'
+  task :configure => :environment do
+    # create tmp and db directories
+    require 'fileutils'
+    basedir = File.dirname(__FILE__)
+    ["tmp/sphinx/log", "db/sphinx"].each do |dir|
+      FileUtils.mkdir_p "#{basedir}/#{dir}" unless File.exists? "#{basedir}/#{dir}"
+    end
+
+    # copy default config
+    FileUtils.cp "#{basedir}/sphinx.conf.example", "#{basedir}/sphinx.conf" unless File.exists? "#{basedir}/sphinx.conf"
+  end
+
+  namespace :search do
+    desc 'start the Sphinx search daemon'
+    task :start => :configure do
+      cmd = "searchd --config sphinx.conf"
+      cmd << "> /dev/null" unless Rake.application.options.trace
+      system(cmd)
+    end
+
+    desc 'stop the Sphinx search daemon'
+    task :stop => :configure do
+      cmd = "searchd --stop"
+      system(cmd)
+    end
+  end
+
+  desc 'run the search indexer'
+  task :index => :configure do
+    cmd = "indexer --all --config sphinx.conf"
+    system(cmd)
   end
 end
 
 namespace :gems do
   desc 'Install required gems'
   task :install do
-    required_gems = %w{ sinatra dm-core dm-aggregates dm-validations dm-is-paginated merb-pagination
-                        haml pauldix-feedzirra thoughtbot-factory_girl rspec rspec_hpricot_matchers }
+    required_gems = %w{ sinatra dm-core dm-aggregates dm-validations dm-is-paginated 
+                        dm-is-searchable shanna-dm-sphinx-adapter merb-pagination haml
+                        pauldix-feedzirra thoughtbot-factory_girl rspec rspec_hpricot_matchers }
     required_gems.each { |required_gem| system "sudo gem install #{required_gem}" }
   end
+end
+
+desc 'Initialize the environment'
+task :environment do
+  require 'environment'
 end

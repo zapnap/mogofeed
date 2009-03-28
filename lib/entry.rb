@@ -27,6 +27,7 @@ class Entry
   validates_is_unique  :url
 
   belongs_to :feed
+  is :searchable
   is_paginated
 
   # create a new record directly from feed data

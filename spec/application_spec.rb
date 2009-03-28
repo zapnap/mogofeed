@@ -29,14 +29,19 @@ describe 'Application' do
   end
 
   context 'search queries' do
+    before(:each) do
+      Entry.stub!(:search).and_return([@entry])
+    end
+
     specify 'should return matching records' do
-      pending
+      Entry.should_receive(:search).with({:content => 'power ring'}).and_return([@entry])
+      post '/search', :q => 'power ring'
     end
 
     specify 'should render the search results' do
       post '/search', :q => 'power ring'
       @response.should be_ok
-      @response.should have_tag("h1 span", 'power ring')
+      @response.should have_tag("h1 span", /power ring/)
     end
   end
 end

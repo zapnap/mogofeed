@@ -1,8 +1,10 @@
 %h1
   Search Results for
-  %span= params[:q]
+  %span= "'#{params[:q]}'"
 %ul.entries
   - @entries.each do |entry|
     %li.entry{:id => "entry-#{entry.id}", :class => 'entry'}
+      %h2.title
+        %a{:href => entry.url}= entry.title
       .author= "Published on #{entry.published_at} by #{entry.author}"
       .content= entry.content
