@@ -3,6 +3,7 @@
   %head
     %title= @title || SiteConfig.title
     %link{:href => '/stylesheets/application.css', :rel => 'stylesheet', :type => 'text/css'}
+    %link{:href => '/feed', :rel => 'alternate', :type => 'application/atom+xml', :title => "#{SiteConfig.title} feed"}
   %body
     #container
       #header
