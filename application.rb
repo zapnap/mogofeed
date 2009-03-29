@@ -26,6 +26,13 @@ end
   end
 end
 
+get '/feed' do
+  content_type 'application/atom+xml', :charset => 'utf-8'
+  @entries = Entry.all(:order => [:published_at.desc],
+                       :limit => SiteConfig.per_page)
+  builder :feed
+end
+
 post '/search' do
   # TODO: use dm-is-searchable and the sphinx search adapter here!
   @entries = [Entry.first]

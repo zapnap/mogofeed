@@ -27,10 +27,8 @@ class Feed
 
   # updates the feed attributes and cached feed entries, returns number of new entries
   def update_from_remote
-    if self.updated_at.nil? || remote_feed.last_modified > self.updated_at
-      update_with_remote_feed
-      save if dirty?
-    end
+    update_with_remote_feed
+    save if dirty?
     update_with_remote_entries
   end
 
@@ -52,11 +50,11 @@ class Feed
     count = 0
     if remote_feed
       remote_feed.entries.each do |entry|
-        if self.updated_at.nil? || (entry.published > self.updated_at)
+        if Entry.first(:url => entry.url)
+          break # should be ordered most to least recent, so safe to disregard the rest
+        else
           entry.sanitize!
           count += 1 if self.entries.create_from_feed(self, entry)
-        else
-          break
         end
       end
     end

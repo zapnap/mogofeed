@@ -33,7 +33,7 @@ class Entry
   def self.create_from_feed(feed, data)
     s = self.new(:feed => feed)
     ATTR_MAP.each { |k,v| s.send("#{v.to_s}=", data.send(k)) }
-    #puts s.errors.full_messages.to_s unless s.valid?
+    puts s.errors.full_messages.to_s unless s.valid?
     s.save && s
   end
 end

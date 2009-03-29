@@ -28,6 +28,16 @@ describe 'Application' do
     end
   end
 
+  context 'atom feed' do
+    specify 'should contain recent entries' do
+      get '/feed'
+      @response.should be_ok
+      @response.should have_tag("entry", :count => 1) do |entry|
+        entry.should have_tag("content", @entry.content)
+      end
+    end
+  end
+
   context 'search queries' do
     specify 'should return matching records' do
       pending
