@@ -2,4 +2,3 @@
 
 * Search interface using dm-is-searchable and the sphinx adapter
 * Ability to add new feeds from web interface (with admin approval?)
-* Generate Atom and RSS feeds

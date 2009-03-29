@@ -20,6 +20,8 @@
           - Feed.all.each do |feed|
             %li.feed
               %a{:href => feed.url}= feed.title
+        %h2 Subscribe
+        %a{:href => '/feed'} Atom Feed
       #content= yield
       .clear
       #footer

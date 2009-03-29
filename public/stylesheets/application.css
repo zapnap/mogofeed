@@ -96,7 +96,7 @@ ul.feeds li.feed {
 #sidebar a {
   color: #999;
 }
-#search {
+#search, .feeds {
   margin-bottom: 2em;
 }
 .paginated {
