@@ -3,6 +3,7 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 describe 'Feed' do
   before(:each) do
     Feed.all.destroy!
+    Entry.all.destroy!
     @feed = Factory.build(:feed)
   end
 
@@ -49,8 +50,14 @@ describe 'Feed' do
   end
 
   describe 'when updating' do
+    before(:each) do
+      @feed.stub!(:check_remote_feed).and_return(true)
+      @feed.save
+      @entry = Factory(:entry)
+    end
+
     specify 'should retrieve remote data' do
-      Feedzirra::Feed.should_receive(:fetch_and_parse).with(@feed.feed_url).and_return(0)
+      Feedzirra::Feed.should_receive(:fetch_and_parse).and_return(0)
       @feed.update_from_remote
     end
 
@@ -64,8 +71,8 @@ describe 'Feed' do
       @feed.update_from_remote.should > 0
     end
 
-    specify 'should not add new entries if last modified date is more recent' do
-      @feed.updated_at = Time.now
+    specify 'should not add new entries if they already exist' do
+      @feed.remote_feed.should_receive(:entries).and_return([mock('Data', :url => @entry.url)])
       @feed.entries.should_not_receive(:create_from_feed)
       @feed.update_from_remote.should == 0
     end

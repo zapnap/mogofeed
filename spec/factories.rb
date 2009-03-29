@@ -1,8 +1,10 @@
 require 'factory_girl'
 
 Factory.define :feed do |f|
-  f.title    'zerosum dirt(nap) - Home'
-  f.feed_url 'http://feeds2.feedburner.com/ZerosumDirtnap'
+  f.title     'zerosum dirt(nap) - Home'
+  f.feed_url  'http://feeds2.feedburner.com/ZerosumDirtnap'
+  f.created_at Time.now
+  f.updated_at Time.now
 end
 
 Factory.define :entry do |f|
