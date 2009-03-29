@@ -21,9 +21,14 @@ configure do
                  :search          => 'sphinx://localhost:3312' # set to false to disable searching
                )
 
-  #DataMapper.setup(:default, "sqlite3:///#{File.expand_path(File.dirname(__FILE__))}/#{Sinatra::Base.environment}.db")
-  DataMapper.setup(:default, "mysql://root@localhost/mogo")
-  DataMapper.setup(:search, SiteConfig.search) if SiteConfig.search
+  if SiteConfig.search
+    # change me if you're using MySQL (fill in username, password, database name)
+    DataMapper.setup(:default, "mysql://root@localhost/mogo")
+    DataMapper.setup(:search, SiteConfig.search)
+  else
+    # otherwise we use a standard sqlite3 database named after the current environment
+    DataMapper.setup(:default, "sqlite3:///#{File.expand_path(File.dirname(__FILE__))}/#{Sinatra::Base.environment}.db")
+  end
 
   # load models
   $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/lib")
