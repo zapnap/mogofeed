@@ -8,6 +8,7 @@ describe 'Feed' do
   end
 
   specify 'should be valid' do
+    @feed.stub!(:check_remote_feed).and_return(true)
     @feed.should be_valid
   end
 
