@@ -23,7 +23,7 @@ class Entry
   property :created_at,   Time
   property :updated_at,   Time
 
-  validates_present    :title, :url, :summary, :feed_id
+  validates_present    :title, :url, :feed_id
   validates_is_unique  :url
 
   belongs_to :feed

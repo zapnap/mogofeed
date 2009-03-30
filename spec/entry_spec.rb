@@ -30,12 +30,6 @@ describe 'Entry' do
       @entry.errors[:feed_id].should include("Feed must not be blank")
     end
 
-    specify 'should require a summary' do
-      @entry.summary = nil
-      @entry.should_not be_valid
-      @entry.errors[:summary].should include("Summary must not be blank")
-    end
-
     specify 'should require a unique url' do
       @entry.save
       @entry = Factory.build(:entry)
