@@ -6,5 +6,9 @@
     %li.entry{:id => "entry-#{entry.id}", :class => 'entry'}
       %h2.title
         %a{:href => entry.url}= entry.title
-      .author= "Published on #{entry.published_at} by #{entry.author}"
+      .author
+        = "Published on #{entry.published_at}"
+        = " by #{entry.author}" if entry.author
+        = " at "
+        %a{:href => entry.feed.url}= entry.feed.title
       .content= entry.content || entry.summary
