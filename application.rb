@@ -34,6 +34,6 @@ get '/feed' do
 end
 
 post '/search' do
-  @entries = Entry.search({ :content => params[:q] })
+  @entries = Entry.search(:conditions => [params[:q].to_s])
   haml :search
 end
