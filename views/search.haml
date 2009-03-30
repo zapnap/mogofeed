@@ -7,4 +7,4 @@
       %h2.title
         %a{:href => entry.url}= entry.title
       .author= "Published on #{entry.published_at} by #{entry.author}"
-      .content= entry.content
+      .content= entry.content || entry.summary

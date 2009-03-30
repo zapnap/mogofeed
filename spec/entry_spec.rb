@@ -11,29 +11,37 @@ describe 'Entry' do
     @entry.should be_valid
   end
 
-  specify 'should require a title' do
-    @entry.title = nil
-    @entry.should_not be_valid
-    @entry.errors[:title].should include("Title must not be blank")
-  end
+  context 'validations' do
+    specify 'should require a title' do
+      @entry.title = nil
+      @entry.should_not be_valid
+      @entry.errors[:title].should include("Title must not be blank")
+    end
 
-  specify 'should require a url' do
-    @entry.url = nil
-    @entry.should_not be_valid
-    @entry.errors[:url].should include("Url must not be blank")
-  end
+    specify 'should require a url' do
+      @entry.url = nil
+      @entry.should_not be_valid
+      @entry.errors[:url].should include("Url must not be blank")
+    end
 
-  specify 'should require a feed' do
-    @entry.feed_id = nil
-    @entry.should_not be_valid
-    @entry.errors[:feed_id].should include("Feed must not be blank")
-  end
+    specify 'should require a feed' do
+      @entry.feed_id = nil
+      @entry.should_not be_valid
+      @entry.errors[:feed_id].should include("Feed must not be blank")
+    end
 
-  specify 'should require a unique url' do
-    @entry.save
-    @entry = Factory.build(:entry)
-    @entry.should_not be_valid
-    @entry.errors[:url].should include("Url is already taken")
+    specify 'should require a summary' do
+      @entry.summary = nil
+      @entry.should_not be_valid
+      @entry.errors[:summary].should include("Summary must not be blank")
+    end
+
+    specify 'should require a unique url' do
+      @entry.save
+      @entry = Factory.build(:entry)
+      @entry.should_not be_valid
+      @entry.errors[:url].should include("Url is already taken")
+    end
   end
 
   specify 'should create new entry from feed data' do
@@ -52,6 +60,7 @@ describe 'Entry' do
       :title         => 'Hulk Smash!',
       :url           => 'http://foo.bar/hulk-smash',
       :author        => 'Stan',
+      :summary       => 'Wreck up the place',
       :content       => 'Wreck up the place',
       :last_modified => Time.now
     )

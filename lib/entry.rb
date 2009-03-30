@@ -23,7 +23,7 @@ class Entry
   property :created_at,   Time
   property :updated_at,   Time
 
-  validates_present    :title, :url, :content, :feed_id
+  validates_present    :title, :url, :summary, :feed_id
   validates_is_unique  :url
 
   belongs_to :feed
@@ -35,7 +35,6 @@ class Entry
   def self.create_from_feed(feed, data)
     s = self.new(:feed => feed)
     ATTR_MAP.each { |k,v| s.send("#{v.to_s}=", data.send(k)) }
-    puts s.errors.full_messages.to_s unless s.valid?
     s.save && s
   end
 end

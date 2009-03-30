@@ -31,7 +31,7 @@ source entries
   sql_pass = 
   sql_user = root
   #sql_query_range = SELECT MIN(id), MAX(id) FROM entries 
-  sql_query = SELECT (entries.id * 1 + 0) AS id, 'Entry' AS class, 0 AS class_id, entries.content AS content FROM entries
+  sql_query = SELECT (entries.id * 1 + 0) AS id, 'Entry' AS class, 0 AS class_id, entries.content AS content, entries.summary AS summary FROM entries
 
   sql_attr_uint = class_id
   sql_query_info = SELECT * FROM entries WHERE entries.id = (($id - 0) / 1)
