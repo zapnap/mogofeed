@@ -14,7 +14,7 @@
         - if SiteConfig.search
           %h2 Search
           %form{:action => '/search', :method => 'post'}
-            %input{:type => 'text', :id => 'search', :name => 'q'}
+            %input{:type => 'text', :id => 'search', :name => 'q', :value => params[:q]}
         %h2 Feeds
         %ul.feeds
           - Feed.all.each do |feed|
