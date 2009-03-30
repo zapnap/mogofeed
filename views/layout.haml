@@ -13,8 +13,9 @@
       #sidebar
         - if SiteConfig.search
           %h2 Search
-          %form{:action => '/search', :method => 'post'}
+          %form{:action => '/search', :method => 'post', :class => 'search'}
             %input{:type => 'text', :id => 'search', :name => 'q', :value => params[:q]}
+            %p.note HELP: "search query" +include -exclude
         %h2 Feeds
         %ul.feeds
           - Feed.all.each do |feed|

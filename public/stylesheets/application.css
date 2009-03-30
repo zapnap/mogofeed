@@ -96,8 +96,12 @@ ul.feeds li.feed {
 #sidebar a {
   color: #999;
 }
-#search, .feeds {
+.search, .feeds {
   margin-bottom: 2em;
+}
+.note {
+  font-size: 0.8em;
+  color: #666;
 }
 .paginated {
   margin-top: 1em;

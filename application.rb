@@ -34,6 +34,7 @@ get '/feed' do
 end
 
 post '/search' do
-  @entries = Entry.search(:conditions => [params[:q].to_s])
+  @entries = Entry.search(:conditions => [params[:q].to_s], 
+                          :limit => SiteConfig.per_page)
   haml :search
 end
