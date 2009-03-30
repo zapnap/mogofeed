@@ -71,8 +71,9 @@ namespace :sphinx do
   end
 
   desc 'run the search indexer'
-  task :index => :configure do
+  task :reindex => :configure do
     cmd = "indexer --all --config sphinx.conf"
+    cmd << " --rotate" if File.exists? "#{File.dirname(__FILE__)}/tmp/sphinx/log/searchd.pid"
     system(cmd)
   end
 end

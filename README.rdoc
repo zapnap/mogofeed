@@ -31,7 +31,7 @@ To enable search in Mogo, set the option in <tt>environment.rb</tt>. Search is d
 
 Once that's done, go ahead and run the supplied Rake tasks to get up and running:
 
-  rake sphinx:index        # update the search indexes; you'll probably want to schedule this periodically
+  rake sphinx:reindex      # update the search indexes; you'll probably want to schedule this periodically
   rake sphinx:search:start # start it up
   rake sphinx:search:stop  # shut it down
 
