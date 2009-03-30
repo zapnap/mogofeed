@@ -1,0 +1,15 @@
+%h2== Found the following feed#{@preview_contents.size == 1 ? "" : "s"}:
+
+#feeds-preview
+  - @preview_contents.each do |title, url, entries|
+    .feed-preview
+      %h3
+        &= title
+        %form.suggest-form{:action => '/suggest', :method => 'post'}
+          %input{:type => 'hidden', :value => url, :name => 'url'}/
+          %input{:type => 'submit', :value => "suggest &raquo;"}/
+      %ul.individual-feed
+        - entries.to_a.each do |title, link|
+          %li.feed-entry
+            %a{:href => link}&= title
+        

@@ -42,6 +42,18 @@ class Feed
     @feed.is_a?(Fixnum) ? nil : @feed
   end
 
+  def self.preview_url(feed_or_blog_url, recurse = true)
+    @feed = Feedzirra::Feed.fetch_and_parse(feed_or_blog_url.to_s)
+    if @feed
+      [[@feed.title, feed_or_blog_url, @feed.entries.map { |e| [e.title, e.url] }]]
+    elsif recurse
+      urls = Columbus.new(feed_or_blog_url).all
+      urls.map { |u| preview_url(u.url, false) }.reject { |u| u.empty? }.inject([]) { |a, c| a + c }
+    else
+      []
+    end
+  end
+
   private
 
   # autodiscover news feed from a url

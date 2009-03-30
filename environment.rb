@@ -11,6 +11,7 @@ require 'haml'
 require 'ostruct'
 require 'columbus'
 require 'feedzirra'
+require 'columbus'
 
 require 'sinatra' unless defined?(Sinatra)
 require 'sinatra/authorization'

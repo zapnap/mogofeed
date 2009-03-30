@@ -43,7 +43,16 @@ get '/feed' do
   builder :feed
 end
 
-# search
+post '/suggest' do
+  @preview_contents = Feed.preview_url(params[:url])
+  if @preview_contents.size == 1
+    Feed.create(:feed_url => @preview_contents[0][1])
+    redirect '/'
+  else
+    haml :preview
+  end
+end
+
 post '/search' do
   @entries = Entry.search(:conditions => [params[:q].to_s], 
                           :limit => SiteConfig.per_page)
