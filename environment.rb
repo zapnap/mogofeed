@@ -18,13 +18,14 @@ configure do
                  :title           => 'Planet Mogo',            # title of application
                  :url_base        => 'http://localhost:4567/', # base URL for your site
                  :per_page        => 10,                       # number of entries to display per page
-                 :search          => 'sphinx://localhost:3312' # set to false to disable searching
+                 :search          => false                     # disabled by default
                )
 
   if SiteConfig.search
-    # change me if you're using MySQL (fill in username, password, database name)
+    # change me if you're enabling search functionality
+    # tested with MySQL - fill in username, password, database name
     DataMapper.setup(:default, "mysql://root@localhost/mogo")
-    DataMapper.setup(:search, SiteConfig.search)
+    DataMapper.setup(:search, "sphinx://localhost:3312")
   else
     # otherwise we use a standard sqlite3 database named after the current environment
     DataMapper.setup(:default, "sqlite3:///#{File.expand_path(File.dirname(__FILE__))}/#{Sinatra::Base.environment}.db")

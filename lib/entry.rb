@@ -27,8 +27,9 @@ class Entry
   validates_is_unique  :url
 
   belongs_to :feed
-  is :searchable
   is_paginated
+
+  is :searchable if SiteConfig.search
 
   # create a new record directly from feed data
   def self.create_from_feed(feed, data)
