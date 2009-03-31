@@ -21,7 +21,7 @@ configure do
                  :per_page       => 10,                       # number of entries to display per page
                  :admin_login    => 'admin',                  # admin username
                  :admin_password => 'password',               # CHANGE ME
-                 :search         => true                      # disabled by default
+                 :search         => false                     # disabled by default
                )
 
   if SiteConfig.search
