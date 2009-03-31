@@ -4,6 +4,7 @@ require 'environment'
 
 configure do
   set :views, "#{File.dirname(__FILE__)}/views"
+  set :authorization_realm, "Protected"
 end
 
 error do
@@ -14,6 +15,14 @@ end
 
 helpers do
   include Merb::PaginationHelper
+
+  def authorize(login, password)
+    login == SiteConfig.admin_login && password == SiteConfig.admin_password
+  end
+
+  def authorization_realm
+    "Protected"
+  end
 end
 
 # root page
@@ -37,4 +46,26 @@ post '/search' do
   @entries = Entry.search(:conditions => [params[:q].to_s], 
                           :limit => SiteConfig.per_page)
   haml :search
+end
+
+['/admin', '/admin/feeds'].each do |action|
+  get action do
+    login_required
+    @feeds = Feed.all
+    haml :admin
+  end
+end
+
+post '/admin/feeds' do
+  login_required
+  @feed = Feed.new(:feed_url => params[:url])
+  @feed.save
+  redirect '/admin'
+end
+
+delete '/admin/feeds/:id' do
+  login_required
+  @feed = Feed.get(params[:id])
+  @feed.destroy
+  redirect '/admin'
 end

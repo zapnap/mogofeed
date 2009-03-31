@@ -9,13 +9,15 @@ Dependencies and all configuration is done in <tt>environment.rb</tt>. Your data
 == Getting Started
 
   rake db:migrate
-  rake feeds:add URL=http://blog.zerosum.org/feed/atom.xml
+  rake feeds:add URL=http://sinatra.github.com/feed.xml
   rake feeds:update
   ruby application.rb
 
 == Adding Feeds
 
-I'll add a web interface for this soon. In the meantime, run <tt>rake feeds:add</tt> and specify the feed URL you want to add as a parameter. Example:
+Use the web interface located at <tt>/admin</tt> to add and remove feeds. Accessing this URL will require a username and password. These settings are adjustable in <tt>environment.rb</tt>; the defaults are 'admin' and 'password'.
+
+You can also add feeds directly from the command line:
 
   rake feeds:add URL=http://blog.zerosum.org/feed/atom.xml
 

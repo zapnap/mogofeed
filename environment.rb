@@ -12,13 +12,16 @@ require 'ostruct'
 require 'feedzirra'
 
 require 'sinatra' unless defined?(Sinatra)
+require 'sinatra/authorization'
 
 configure do
   SiteConfig = OpenStruct.new(
-                 :title           => 'Planet Mogo',            # title of application
-                 :url_base        => 'http://localhost:4567/', # base URL for your site
-                 :per_page        => 10,                       # number of entries to display per page
-                 :search          => false                     # disabled by default
+                 :title          => 'Planet Mogo',            # title of application
+                 :url_base       => 'http://localhost:4567/', # base URL for your site
+                 :per_page       => 10,                       # number of entries to display per page
+                 :admin_login    => 'admin',                  # admin username
+                 :admin_password => 'password',               # CHANGE ME
+                 :search         => true                      # disabled by default
                )
 
   if SiteConfig.search
@@ -34,7 +37,7 @@ configure do
   # load models
   $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/lib")
   Dir.glob("#{File.dirname(__FILE__)}/lib/*.rb") { |lib| require File.basename(lib, '.*') }
-end
 
-# prevent Object#id warnings
-Object.send(:undef_method, :id)
+  # prevent Object#id warnings
+  Object.send(:undef_method, :id)
+end

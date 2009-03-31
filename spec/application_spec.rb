@@ -1,23 +1,30 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe 'Application' do
-  include Sinatra::Test
+  include Rack::Test::Methods
+
+  def app
+    Sinatra::Application.new
+  end
 
   before(:each) do
+    Feed.all.destroy!
+    Entry.all.destroy!
+    @feed = Factory(:feed)
     @entry = Factory(:entry)
   end
 
   context 'home page' do
     specify "should show the default index page" do
       get '/'
-      @response.should be_ok
-      @response.body.should match(/#{SiteConfig.title}/)
+      last_response.should be_ok
+      last_response.body.should have_tag('h1', /#{SiteConfig.title}/)
     end
 
     specify 'should show the most recent entries' do
       get '/'
-      @response.should be_ok
-      @response.should have_tag("li#entry-#{@entry.id}", :count => 1)
+      last_response.should be_ok
+      last_response.body.should have_tag("li#entry-#{@entry.id}", :count => 1)
     end
 
     specify 'should retrieve second page of results' do
@@ -31,8 +38,8 @@ describe 'Application' do
   context 'atom feed' do
     specify 'should contain recent entries' do
       get '/feed'
-      @response.should be_ok
-      @response.should have_tag("entry", :count => 1) do |entry|
+      last_response.should be_ok
+      last_response.body.should have_tag("entry", :count => 1) do |entry|
         entry.should have_tag("content", @entry.content)
       end
     end
@@ -50,8 +57,74 @@ describe 'Application' do
 
     specify 'should render the search results' do
       post '/search', :q => 'power ring'
-      @response.should be_ok
-      @response.should have_tag("h1 span", /power ring/)
+      last_response.should be_ok
+      last_response.body.should have_tag("h1 span", /power ring/)
+    end
+  end
+
+  context 'admin' do
+
+    context 'listing feeds' do
+      specify 'should include a list of known feeds' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        get '/admin'
+        last_response.should be_ok
+        last_response.body.should have_tag("li#feed-#{@feed.id}", :count => 1)
+      end
+
+      specify 'should include a form for adding a new feed' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        get '/admin'
+        last_response.should be_ok
+        last_response.body.should have_tag("form[@action='/admin/feeds']")
+      end
+
+      specify 'should require login' do
+        get '/admin'
+        last_response.status.should == 401
+      end
+    end
+
+    context 'adding a new feed' do
+      specify 'should create a new feed' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        lambda { 
+          post '/admin/feeds', :url => 'http://sinatra.github.com/feed.xml'
+        }.should change(Feed, :count).by(1)
+      end
+
+      specify 'should redirect to the main admin page' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        post '/admin/feeds', :url => 'http://sinatra.github.com/feed.xml'
+        follow_redirect!
+        last_request.url.should match(/.*\/admin$/)
+      end
+
+      specify 'should require login' do
+        post '/admin/feeds', :url => 'http://sinatra.github.com/feed.xml'
+        last_response.status.should == 401
+      end
+    end
+
+    context 'deleting a feed' do
+      specify 'should remove the feed' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        lambda { 
+          delete "/admin/feeds/#{@feed.id}"
+        }.should change(Feed, :count).by(-1)
+      end
+
+      specify 'should redirect to the main admin page' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        delete "/admin/feeds/#{@feed.id}"
+        follow_redirect!
+        last_request.url.should match(/.*\/admin$/)
+      end
+
+      specify 'should require login' do
+        delete '/admin/feeds/1'
+        last_response.status.should == 401
+      end
     end
   end
 end

@@ -1,0 +1,12 @@
+%h1 Manage Feeds
+%ul.feeds
+  - @feeds.each do |feed|
+    %li{:id => "feed-#{feed.id}", :class => 'feed'}
+      %form{:action => "/admin/feeds/#{feed.id}", :method => 'post', :class => 'delete'}
+        %input{:type => 'hidden', :name => '_method', :value => 'delete'}
+        %input{:type => 'submit', :value => 'X', :onclick => "return confirm('Are you sure? This will delete the feed and all its entries')"}
+        %a{:href => feed.url, :target => '_blank'}= feed.title
+        = "- #{feed.entries.length} entries"
+%form{:action => '/admin/feeds', :method => 'post'}
+  %input{:type => 'text', :name => 'url'}
+  %input{:type => 'submit', :value => 'Add New Feed'}

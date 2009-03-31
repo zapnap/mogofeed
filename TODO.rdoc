@@ -1,4 +1,7 @@
 = TODO
 
-* Refine search interface; other options?
-* Ability to add new feeds from web interface (with admin approval?)
+* Add feed 'update now' capability to admin page
+* Auto-Reindex search after admin changes (ex: delete a feed)
+* Use columbus for feed discovery
+* Allow users to suggest feeds?
+  

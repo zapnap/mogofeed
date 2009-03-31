@@ -81,9 +81,9 @@ end
 namespace :gems do
   desc 'Install required gems'
   task :install do
-    required_gems = %w{ sinatra dm-core dm-aggregates dm-validations dm-timestamps dm-is-paginated 
-                        dm-is-searchable shanna-dm-sphinx-adapter merb-pagination haml
-                        pauldix-feedzirra thoughtbot-factory_girl rspec rspec_hpricot_matchers }
+    required_gems = %w{ sinatra sr-sinatra-authorization dm-core dm-aggregates dm-validations dm-timestamps
+                        dm-is-searchable shanna-dm-sphinx-adapter dm-is-paginated merb-pagination haml
+                        pauldix-feedzirra thoughtbot-factory_girl rack-test rspec rspec_hpricot_matchers }
     required_gems.each { |required_gem| system "sudo gem install #{required_gem}" }
   end
 end

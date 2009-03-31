@@ -25,6 +25,10 @@ class Feed
   has n, :entries
   is_paginated
 
+  before(:destroy) do
+    self.entries.all.destroy!
+  end
+
   # updates the feed attributes and cached feed entries, returns number of new entries
   def update_from_remote
     update_with_remote_feed
