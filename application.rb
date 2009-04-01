@@ -25,7 +25,7 @@ helpers do
   end
 end
 
-# root page
+# main page, index of recent entries
 ['/', '/page/:page'].each do |action|
   get action do 
     @pages, @entries = Entry.paginated(:order => [:published_at.desc], 
@@ -35,6 +35,7 @@ end
   end
 end
 
+# atom feed
 get '/feed' do
   content_type 'application/atom+xml', :charset => 'utf-8'
   @entries = Entry.all(:order => [:published_at.desc],
@@ -42,12 +43,14 @@ get '/feed' do
   builder :feed
 end
 
+# search
 post '/search' do
   @entries = Entry.search(:conditions => [params[:q].to_s], 
                           :limit => SiteConfig.per_page)
   haml :search
 end
 
+# admin page, feed management
 ['/admin', '/admin/feeds'].each do |action|
   get action do
     login_required
@@ -56,6 +59,7 @@ end
   end
 end
 
+# admin feed create
 post '/admin/feeds' do
   login_required
   @feed = Feed.new(:url => params[:url])
@@ -63,9 +67,18 @@ post '/admin/feeds' do
   redirect '/admin'
 end
 
+# admin feed delete
 delete '/admin/feeds/:id' do
   login_required
   @feed = Feed.get(params[:id])
   @feed.destroy
+  redirect '/admin'
+end
+
+# admin feed update (from remote)
+post '/admin/feeds/:id/update' do
+  login_required
+  @feed = Feed.get(params[:id])
+  @feed.update_from_remote
   redirect '/admin'
 end

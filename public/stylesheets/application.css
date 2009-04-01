@@ -126,7 +126,8 @@ ul.feeds li.feed {
 .clear {
   clear: both;
 }
-form.delete {
+form.action {
   margin: 0;
   padding: 0;
+  display: inline;
 }

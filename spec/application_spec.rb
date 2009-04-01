@@ -126,5 +126,26 @@ describe 'Application' do
         last_response.status.should == 401
       end
     end
+
+    context 'updating feeds' do
+      specify 'should run update for the specified feed' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        Feed.should_receive(:get).with('1').and_return(@feed)
+        @feed.should_receive(:update_from_remote).and_return(true)
+        post "/admin/feeds/#{@feed.id}/update"
+      end
+
+      specify 'should redirect to the main admin page' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        post "/admin/feeds/#{@feed.id}/update"
+        follow_redirect!
+        last_request.url.should match(/.*\/admin$/)
+      end
+
+      specify 'should require login' do
+        post '/admin/feeds/1/update'
+        last_response.status.should == 401
+      end
+    end
   end
 end
