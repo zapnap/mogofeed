@@ -58,7 +58,7 @@ describe 'Application' do
     specify 'should render the search results' do
       post '/search', :q => 'power ring'
       last_response.should be_ok
-      last_response.body.should have_tag("h1 span", /power ring/)
+      last_response.body.should have_tag("h2 span", /power ring/)
     end
   end
 
