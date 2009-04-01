@@ -58,7 +58,7 @@ end
 
 post '/admin/feeds' do
   login_required
-  @feed = Feed.new(:feed_url => params[:url])
+  @feed = Feed.new(:url => params[:url])
   @feed.save
   redirect '/admin'
 end

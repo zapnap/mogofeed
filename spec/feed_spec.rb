@@ -17,19 +17,20 @@ describe 'Feed' do
       @feed.stub!(:check_remote_feed).and_return(true)
     end
 
-    #specify 'should require a title' do
-    #  @feed.title = nil
-    #  @feed.should_not be_valid
-    #  @feed.errors[:title].should include("Title must not be blank")
-    #end
-
-    specify 'should require a feed url' do
-      @feed.feed_url = nil
+    specify 'should require a url' do
+      @feed.url = nil
       @feed.should_not be_valid
-      @feed.errors[:feed_url].should include("Feed url must not be blank")
+      @feed.errors[:url].should include("Url must not be blank")
     end
 
     specify 'should require a unique url' do
+      @feed.save
+      @feed = Factory.build(:feed)
+      @feed.should_not be_valid
+      @feed.errors[:url].should include("Url is already taken")
+    end
+
+    specify 'should require a unique feed url' do
       @feed.save
       @feed = Factory.build(:feed)
       @feed.should_not be_valid
@@ -37,16 +38,32 @@ describe 'Feed' do
     end
   end
 
-  specify 'should check feed url' do
-    @feed.stub!(:remote_feed).and_return(nil)
+  specify 'should check feed url at creation time' do
+    @feed.should_receive(:discover_feed).and_return(true)
+    @feed.should_receive(:remote_feed).and_return(nil)
     @feed.feed_url = 'bad kitty'
     @feed.should_not be_valid
     @feed.errors[:feed_url].should include("Feed url must contain a valid RSS or Atom feed")
   end
 
+  specify 'should auto-discover feed url from website at creation time' do
+    @feed.feed_url = nil
+    @feed.url = 'http://nhruby.org'
+    @feed.save.should be_true
+    @feed.feed_url.should == 'http://nhruby.org/feed/atom.xml'
+  end
+
+  specify 'should accept feed url directly in place of discovery url' do
+    feed_url = @feed.feed_url
+    @feed.url = feed_url
+    @feed.save.should be_true
+    @feed.feed_url.should == feed_url
+    @feed.url.should_not == feed_url # home site url provided by feed
+  end
+
   specify 'should retrieve remote feed attributes on create' do
     @feed.title = nil
-    @feed.save
+    @feed.save.should be_true
     @feed.title.should_not be_nil # should be set to remote feed title
   end
 

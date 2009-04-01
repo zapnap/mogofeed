@@ -16,11 +16,11 @@ class Feed
   property :created_at,       Time
   property :updated_at,       Time
 
-  validates_present    :feed_url #, :title
-  validates_is_unique  :feed_url
-
   # will set feed attributes to remote feed values or fail validation if not found
   validates_with_method :feed_url, :method => :check_remote_feed
+
+  validates_present    :url
+  validates_is_unique  :url, :feed_url
 
   has n, :entries
   is_paginated
@@ -39,14 +39,23 @@ class Feed
   # returns the live remote feed, as provided by Feedzirra
   def remote_feed
     @feed ||= Feedzirra::Feed.fetch_and_parse(self.feed_url || '')
-    @feed == 0 ? nil : @feed
+    @feed.is_a?(Fixnum) ? nil : @feed
   end
 
   private
 
+  # autodiscover news feed from a url
+  def discover_feed
+    primary = Columbus.new(self.url).primary
+    self.feed_url = primary.nil? ? self.url : primary.url
+    true
+  rescue
+    false
+  end
+
   # update feed attributes from remote feed
   def update_with_remote_feed
-    ATTR_MAP.each { |k,v| self.send("#{v.to_s}=", remote_feed.send(k)) } if remote_feed
+    ATTR_MAP.each { |k,v| self.send("#{v.to_s}=", remote_feed.send(k)) unless remote_feed.send(k).nil? } if remote_feed
   end
 
   # update cached feed entries from remote feed
@@ -67,7 +76,7 @@ class Feed
 
   # validation to ensure that a feed_url contains a valid RSS or Atom feed
   def check_remote_feed
-    if remote_feed
+    if discover_feed && remote_feed
       update_with_remote_feed
       true
     else

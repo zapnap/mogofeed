@@ -1,7 +1,6 @@
 = TODO
 
 * Add feed 'update now' capability to admin page
-* Auto-Reindex search after admin changes (ex: delete a feed)
-* Use columbus for feed discovery
+* Auto-Reindex search after admin changes (ex: delete a feed) -- is this necessary?
 * Allow users to suggest feeds?
   

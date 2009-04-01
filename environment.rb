@@ -9,6 +9,7 @@ require 'dm-is-paginated'
 require 'merb-pagination'
 require 'haml'
 require 'ostruct'
+require 'columbus'
 require 'feedzirra'
 
 require 'sinatra' unless defined?(Sinatra)

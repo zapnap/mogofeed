@@ -34,10 +34,10 @@ namespace :feeds do
     end
   end
 
-  desc 'Add a feed to the system (URL=http://blog.zerosum.org/feed/atom.xml)'
+  desc 'Add a feed to the system (URL=http://blog.zerosum.org/)'
   task :add => :environment do
-    raise "ERROR: You must specify a valid feed URL!" unless feed_url = ENV['URL']
-    Feed.create(:feed_url => feed_url)
+    raise "ERROR: You must specify a valid feed URL!" unless url = ENV['URL']
+    Feed.create(:url => url)
   end
 end
 
@@ -82,7 +82,7 @@ namespace :gems do
   desc 'Install required gems'
   task :install do
     required_gems = %w{ sinatra sr-sinatra-authorization dm-core dm-aggregates dm-validations dm-timestamps
-                        dm-is-searchable shanna-dm-sphinx-adapter dm-is-paginated merb-pagination haml
+                        dm-is-searchable shanna-dm-sphinx-adapter dm-is-paginated merb-pagination haml jnunemaker-columbus
                         pauldix-feedzirra thoughtbot-factory_girl rack-test rspec rspec_hpricot_matchers }
     required_gems.each { |required_gem| system "sudo gem install #{required_gem}" }
   end

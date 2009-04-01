@@ -89,19 +89,19 @@ describe 'Application' do
       specify 'should create a new feed' do
         authorize SiteConfig.admin_login, SiteConfig.admin_password
         lambda { 
-          post '/admin/feeds', :url => 'http://sinatra.github.com/feed.xml'
+          post '/admin/feeds', :url => 'http://www.nhruby.org'
         }.should change(Feed, :count).by(1)
       end
 
       specify 'should redirect to the main admin page' do
         authorize SiteConfig.admin_login, SiteConfig.admin_password
-        post '/admin/feeds', :url => 'http://sinatra.github.com/feed.xml'
+        post '/admin/feeds', :url => 'http://www.nhruby.org'
         follow_redirect!
         last_request.url.should match(/.*\/admin$/)
       end
 
       specify 'should require login' do
-        post '/admin/feeds', :url => 'http://sinatra.github.com/feed.xml'
+        post '/admin/feeds', :url => 'http://www.nhruby.org'
         last_response.status.should == 401
       end
     end
