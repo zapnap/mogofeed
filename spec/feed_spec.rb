@@ -4,12 +4,22 @@ describe 'Feed' do
   before(:each) do
     Feed.all.destroy!
     Entry.all.destroy!
-    @feed = Factory.build(:feed)
+    @feed = Factory.build(:feed, :approved => false)
   end
 
   specify 'should be valid' do
     @feed.stub!(:check_remote_feed).and_return(true)
     @feed.should be_valid
+  end
+
+  specify 'should default to not approved' do
+    @feed.should_not be_approved
+  end
+  
+  specify 'should let you approve it' do
+    @feed.stub!(:check_remote_feed).and_return(true)
+    @feed.approve!
+    @feed.should be_approved
   end
 
   context 'validations' do

@@ -6,6 +6,7 @@ Factory.define :feed do |f|
   f.feed_url  'http://feeds2.feedburner.com/ZerosumDirtnap'
   f.created_at Time.now
   f.updated_at Time.now
+  f.approved   true
 end
 
 Factory.define :entry do |f|

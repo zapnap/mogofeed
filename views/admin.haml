@@ -8,7 +8,14 @@
       %form{:action => "/admin/feeds/#{feed.id}/update", :method => 'post', :class => 'action'}
         %input{:type => 'submit', :value => 'Update'}
       %a{:href => feed.url, :target => '_blank'}= feed.title
-      = "- #{feed.entries.length} entries"
+      == - #{feed.entries.length} entries
+      - if feed.approved?
+        (this feed is approved)
+      - else
+        (not yet approved,
+        %form{:action => "/admin/feeds/#{feed.id}/approve", :method => 'post', :class => 'action'}
+          %input{:type => 'submit', :value => 'approve now'}
+        )
 %form{:action => '/admin/feeds', :method => 'post'}
   %input{:type => 'text', :name => 'url'}
   %input{:type => 'submit', :value => 'Add New Feed'}

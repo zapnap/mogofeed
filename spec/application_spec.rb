@@ -30,7 +30,8 @@ describe 'Application' do
     specify 'should retrieve second page of results' do
       Entry.should_receive(:paginated).with(:order    => [:published_at.desc],
                                             :per_page => SiteConfig.per_page, 
-                                            :page     => 2).and_return([3, [@entry]])
+                                            :page     => 2,
+                                            'feed.approved' => true).and_return([3, [@entry]])
       get '/page/2'
     end
   end
@@ -51,7 +52,7 @@ describe 'Application' do
     end
 
     specify 'should return matching records' do
-      Entry.should_receive(:search).with(:conditions => ['power ring'], :limit => SiteConfig.per_page).and_return([@entry])
+      Entry.should_receive(:search).with(:conditions => ['power ring'], :limit => SiteConfig.per_page, 'feed.approved' => true).and_return([@entry])
       post '/search', :q => 'power ring'
     end
 
@@ -91,6 +92,12 @@ describe 'Application' do
         lambda { 
           post '/admin/feeds', :url => 'http://www.nhruby.org'
         }.should change(Feed, :count).by(1)
+      end
+      
+      specify 'should create an approved feed' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        post '/admin/feeds', :url => 'http://www.nhruby.org'
+        Feed.first(:order => [:id.desc]).should be_approved
       end
 
       specify 'should redirect to the main admin page' do
@@ -147,5 +154,27 @@ describe 'Application' do
         last_response.status.should == 401
       end
     end
+    
+    context 'approving a feed' do
+      specify 'should run update for the specified feed' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        Feed.should_receive(:get).with('1').and_return(@feed)
+        @feed.should_receive(:approve!).and_return(true)
+        post "/admin/feeds/#{@feed.id}/approve"
+      end
+
+      specify 'should redirect to the main admin page' do
+        authorize SiteConfig.admin_login, SiteConfig.admin_password
+        post "/admin/feeds/#{@feed.id}/approve"
+        follow_redirect!
+        last_request.url.should match(/.*\/admin$/)
+      end
+
+      specify 'should require login' do
+        post '/admin/feeds/1/approve'
+        last_response.status.should == 401
+      end
+    end
+    
   end
 end

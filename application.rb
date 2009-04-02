@@ -30,7 +30,8 @@ end
   get action do 
     @pages, @entries = Entry.paginated(:order => [:published_at.desc], 
                                        :per_page => SiteConfig.per_page,
-                                       :page => (params[:page] || 1).to_i)
+                                       :page => (params[:page] || 1).to_i,
+                                       'feed.approved' => true)
     haml :main
   end
 end
@@ -39,7 +40,8 @@ end
 get '/feed' do
   content_type 'application/atom+xml', :charset => 'utf-8'
   @entries = Entry.all(:order => [:published_at.desc],
-                       :limit => SiteConfig.per_page)
+                       :limit => SiteConfig.per_page,
+                       'feed.approved' => true)
   builder :feed
 end
 
@@ -55,7 +57,8 @@ end
 
 post '/search' do
   @entries = Entry.search(:conditions => [params[:q].to_s], 
-                          :limit => SiteConfig.per_page)
+                          :limit => SiteConfig.per_page,
+                          'feed.approved' => true)
   haml :search
 end
 
@@ -71,7 +74,7 @@ end
 # admin feed create
 post '/admin/feeds' do
   login_required
-  @feed = Feed.new(:url => params[:url])
+  @feed = Feed.new(:url => params[:url], :approved => true)
   @feed.save
   redirect '/admin'
 end
@@ -89,5 +92,13 @@ post '/admin/feeds/:id/update' do
   login_required
   @feed = Feed.get(params[:id])
   @feed.update_from_remote
+  redirect '/admin'
+end
+
+# mark the given feed as approved
+post '/admin/feeds/:id/approve' do
+  login_required
+  @feed = Feed.get(params[:id])
+  @feed.approve!
   redirect '/admin'
 end

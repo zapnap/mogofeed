@@ -15,6 +15,7 @@ class Feed
   property :etag,             String
   property :created_at,       Time
   property :updated_at,       Time
+  property :approved,         Boolean, :default => false
 
   # will set feed attributes to remote feed values or fail validation if not found
   validates_with_method :feed_url, :method => :check_remote_feed
@@ -35,13 +36,21 @@ class Feed
     save if dirty?
     update_with_remote_entries
   end
+  
+  # Approves the feed - meaning it will be shown in the main listing.
+  def approve!
+    self.approved = true
+    self.save!
+  end
 
   # returns the live remote feed, as provided by Feedzirra
   def remote_feed
     @feed ||= Feedzirra::Feed.fetch_and_parse(self.feed_url || '')
     @feed.is_a?(Fixnum) ? nil : @feed
   end
-
+  
+  # Returns an array of tuples, each being [title, url, [feed-previews]]
+  # for a given url. Used for discovering feeds.
   def self.preview_url(feed_or_blog_url, recurse = true)
     @feed = Feedzirra::Feed.fetch_and_parse(feed_or_blog_url.to_s)
     if @feed
