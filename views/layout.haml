@@ -23,6 +23,7 @@
               %a{:href => feed.url}= feed.title
         %h2 Subscribe
         %a{:href => '/feed'} Atom Feed
+        .sidebar-spacer
         %h2 Suggest a feed
         %form.suggest-form{:action => '/suggest', :method => 'post'}
           %input{:type => 'text', :value => '', :name => 'url'}/

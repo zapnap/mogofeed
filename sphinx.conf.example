@@ -30,7 +30,7 @@ source entries
   sql_host = localhost
   sql_pass = 
   sql_user = root
-  sql_query = SELECT id, 'Entry' AS class, 0 as class_id, content, summary FROM entries
+  sql_query = SELECT id, 'Entry' AS class, 0 as class_id, content, summary FROM entries WHERE feed_id IN (SELECT id FROM feeds WHERE approved = 1)
 
   sql_attr_uint = class_id
   sql_query_info = SELECT * FROM entries WHERE entries.id = (($id - 0) / 1)

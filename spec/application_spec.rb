@@ -52,7 +52,7 @@ describe 'Application' do
     end
 
     specify 'should return matching records' do
-      Entry.should_receive(:search).with(:conditions => ['power ring'], :limit => SiteConfig.per_page, 'feed.approved' => true).and_return([@entry])
+      Entry.should_receive(:search).with(:conditions => ['power ring'], :limit => SiteConfig.per_page).and_return([@entry])
       post '/search', :q => 'power ring'
     end
 

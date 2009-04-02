@@ -131,3 +131,6 @@ form.action {
   padding: 0;
   display: inline;
 }
+.sidebar-spacer {
+  height: 1em;
+}

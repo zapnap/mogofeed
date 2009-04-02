@@ -48,7 +48,7 @@ end
 post '/suggest' do
   @preview_contents = Feed.preview_url(params[:url])
   if @preview_contents.size == 1
-    Feed.create(:feed_url => @preview_contents[0][1])
+    Feed.create(:url => @preview_contents[0][1])
     redirect '/'
   else
     haml :preview
@@ -57,8 +57,7 @@ end
 
 post '/search' do
   @entries = Entry.search(:conditions => [params[:q].to_s], 
-                          :limit => SiteConfig.per_page,
-                          'feed.approved' => true)
+                          :limit => SiteConfig.per_page)
   haml :search
 end
 
