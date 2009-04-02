@@ -96,7 +96,7 @@ ul.feeds li.feed {
 #sidebar a {
   color: #999;
 }
-.search, .feeds {
+.search-form, .suggest-form, .feeds {
   margin-bottom: 2em;
 }
 .note {

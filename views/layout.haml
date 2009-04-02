@@ -13,7 +13,7 @@
       #sidebar
         - if SiteConfig.search
           %h2 Search
-          %form{:action => '/search', :method => 'post', :class => 'search'}
+          %form.search-form{:action => '/search', :method => 'post'}
             %input{:type => 'text', :id => 'search', :name => 'q', :value => params[:q]}
             %p.note HELP: "search query" +include -exclude
         %h2 Feeds
@@ -24,7 +24,7 @@
         %h2 Subscribe
         %a{:href => '/feed'} Atom Feed
         .sidebar-spacer
-        %h2 Suggest a feed
+        %h2 Suggest a Feed
         %form.suggest-form{:action => '/suggest', :method => 'post'}
           %input{:type => 'text', :value => '', :name => 'url'}/
           %input{:type => 'submit', :value => "suggest &raquo;"}/
